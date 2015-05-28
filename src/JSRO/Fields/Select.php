@@ -9,7 +9,7 @@ class Select extends FieldAbstract
 {
     protected $id;
     protected $name;
-    protected $options;
+    protected $options = array();
     protected $class;
     protected $label;
 

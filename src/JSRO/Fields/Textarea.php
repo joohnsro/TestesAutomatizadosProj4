@@ -10,7 +10,6 @@ class Textarea extends FieldAbstract
     protected $name;
     protected $value;
     protected $class;
-    protected $observers = [];
     protected $label;
 
     public function setId($id){
