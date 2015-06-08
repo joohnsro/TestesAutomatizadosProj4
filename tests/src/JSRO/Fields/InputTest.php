@@ -58,4 +58,32 @@ class InputTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("valor", $input->getValue());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVerificaSeALabelRecebeuVariavelDoTipoCorreto()
+    {
+        $input = new Input();
+
+        $label = array("foo");
+        $input->adicionaLabel($label);
+    }
+
+    public function testVerificaSeGetFieldEstaFuncionandoCorretamente()
+    {
+        $input = new Input();
+        $input->setType("text");
+        $input->setId("input");
+        $input->setName("inputTeste");
+        $input->setValue("valor");
+        $input->setClass("classe");
+
+        $expected = "<input type='text' id='input' name='inputTeste' value='valor' class='form-control classe'>";
+
+        $this->expectOutputString($expected);
+
+        $input->getField();
+    }
+
+
 }

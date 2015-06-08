@@ -49,4 +49,30 @@ class TextareaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("valor", $textarea->getValue());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVerificaSeALabelRecebeuVariavelDoTipoCorreto()
+    {
+        $textarea = new Textarea();
+
+        $label = array("foo");
+        $textarea->adicionaLabel($label);
+    }
+
+    public function testVerificaSeGetFieldEstaFuncionandoCorretamente()
+    {
+        $textarea = new Textarea();
+        $textarea->setId("textarea");
+        $textarea->setName("textareaTeste");
+        $textarea->setClass("classe");
+        $textarea->setValue("valor");
+
+        $expected = "<textarea id='textarea' name='textareaTeste' class='form-control classe' rows='3'>valor</textarea>";
+
+        $this->expectOutputString($expected);
+
+        $textarea->getField();
+    }
+
 }

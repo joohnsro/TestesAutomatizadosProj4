@@ -61,11 +61,15 @@ class Input extends FieldAbstract
 
     public function adicionaLabel($label)
     {
+        if ( !is_string($label) ) {
+            throw new \InvalidArgumentException("A label pracisa ser do tipo string.");
+        }
+
         $this->label = "<label for='" . $this->getId() . "'>" . $label . "</label>";
     }
 
     public function getField(){
-        echo "<input type='" . $this->getType() . "' id='" . $this->getId() . "' name='" . $this->getName() . "' value='" . $this->getValue() . "' class='form-control " . $this->getClass() . "'> ";
+        echo "<input type='" . $this->getType() . "' id='" . $this->getId() . "' name='" . $this->getName() . "' value='" . $this->getValue() . "' class='form-control " . $this->getClass() . "'>";
     }
 
 }

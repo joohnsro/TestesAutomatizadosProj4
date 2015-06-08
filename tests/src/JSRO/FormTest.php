@@ -35,5 +35,31 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("ok", $form->getShowMessage());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVerificaSeOCreateFieldFieldRecebeuObjetoCorretamente()
+    {
+        $validate = $this->getMockBuilder('\JSRO\Validator')->disableOriginalConstructor()->getMock('\JSRO\Validator');
+        $form = new Form($validate);
+
+        $input = "foo";
+
+        $form->createField($input);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVerificaSeOAddFieldRecebeuObjetoCorretamente()
+    {
+        $validate = $this->getMockBuilder('\JSRO\Validator')->disableOriginalConstructor()->getMock('\JSRO\Validator');
+        $form = new Form($validate);
+
+        $input = "foo";
+
+        $form->addField($input);
+    }
+
 
 } 

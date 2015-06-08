@@ -63,14 +63,22 @@ class Form
         return $this->showMessage;
     }
 
-    public function createField(FieldAbstract $field)
+    public function createField($field)
     {
+        if( !($field instanceof FieldAbstract) ) {
+            throw new \InvalidArgumentException("Objeto não esperado.");
+        }
+
         $this->field = $field->getField();
         return $this;
     }
 
-    public function addField(FieldAbstract $field)
+    public function addField($field)
     {
+        if( !($field instanceof FieldAbstract) ) {
+            throw new \InvalidArgumentException("Objeto não esperado.");
+        }
+
         $this->fields[] = array(
             "field" => $field->getField()
         );

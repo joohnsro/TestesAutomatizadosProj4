@@ -45,11 +45,15 @@ class Textarea extends FieldAbstract
 
     public function adicionaLabel($label)
     {
+        if ( !is_string($label) ) {
+            throw new \InvalidArgumentException("A label pracisa ser do tipo string.");
+        }
+
         $this->label = "<label for='" . $this->getId() . "'>" . $label . "</label>";
     }
 
     public function getField(){
-        echo "<textarea type='text' id='" . $this->getId() . "' name='" . $this->getName() . "' class='form-control " . $this->getClass() . "' rows='3'>" . $this->getValue() . "</textarea>";
+        echo "<textarea id='" . $this->getId() . "' name='" . $this->getName() . "' class='form-control " . $this->getClass() . "' rows='3'>" . $this->getValue() . "</textarea>";
     }
 
 }

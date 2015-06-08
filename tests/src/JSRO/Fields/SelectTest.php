@@ -50,5 +50,30 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array("opt1", "opt2"), $select->getOptions());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVerificaSeALabelRecebeuVariavelDoTipoCorreto()
+    {
+        $select = new Select();
+
+        $label = array("foo");
+        $select->adicionaLabel($label);
+    }
+
+    public function testVerificaSeGetFieldEstaFuncionandoCorretamente()
+    {
+        $select = new Select();
+        $select->setId("select");
+        $select->setName("selectTeste");
+        $select->setClass("classe");
+        $select->setOptions([]);
+
+        $expected = "<select id='select' name='selectTeste' class='form-control classe'></select>";
+
+        $this->expectOutputString($expected);
+
+        $select->getField();
+    }
 
 } 
