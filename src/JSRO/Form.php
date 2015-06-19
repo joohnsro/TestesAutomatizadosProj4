@@ -2,16 +2,15 @@
 
 namespace JSRO;
 
+
 class Form
 {
 
-    protected $action;
-    protected $method;
-    protected $showMessage;
-    protected $field = array();
-    protected $fields = array();
-
-    public function __construct(Validator $validator){}
+    private $action;
+    private $method;
+    private $class;
+    private $display;
+    private $fields = array();
 
     /**
      * @param mixed $action
@@ -19,7 +18,6 @@ class Form
     public function setAction($action)
     {
         $this->action = $action;
-        return $this;
     }
 
     /**
@@ -31,12 +29,27 @@ class Form
     }
 
     /**
+     * @param mixed $class
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
      * @param mixed $method
      */
     public function setMethod($method)
     {
         $this->method = $method;
-        return $this;
     }
 
     /**
@@ -47,98 +60,51 @@ class Form
         return $this->method;
     }
 
-    /**
-     * @param mixed $showMessage
-     */
-    public function setShowMessage($showMessage)
+    public function displayAlert($display)
     {
-        $this->showMessage = $showMessage;
-    }
+        $displayOptions = array("top", "inline", "bottom");
 
-    /**
-     * @return mixed
-     */
-    public function getShowMessage()
-    {
-        return $this->showMessage;
-    }
-
-    public function createField($field)
-    {
-        if( !($field instanceof FieldAbstract) ) {
-            throw new \InvalidArgumentException("Objeto não esperado.");
+        if ( !in_array($display, $displayOptions) ) {
+            throw new \InvalidArgumentException("O metodo de display nao existe.");
         }
 
-        $this->field = $field->getField();
-        return $this;
+        $this->display = $display;
+        return $this->display;
     }
 
-    public function addField($field)
+    public function addField($data)
     {
-        if( !($field instanceof FieldAbstract) ) {
-            throw new \InvalidArgumentException("Objeto não esperado.");
+        if ( !$data instanceof FieldAbstract ) {
+            throw new \InvalidArgumentException("O campo nao foi adicionado.");
         }
 
-        $this->fields[] = array(
-            "field" => $field->getField()
-        );
+        $this->fields[] = $data;
         return $this->fields;
     }
 
     public function render()
     {
-        echo '<form action="' . $this->getAction() . '" method="' . $this->getMethod() . '" class="form-horizontal">';
-        foreach ($this->fields as $field){
-            echo ($field['label'] !== null) ? $field['label'] . $field['field'] : $field['field'];
+        $fields = "";
+        $alerts = "";
+
+        if ( count($this->fields) > 0 ) {
+            foreach($this->fields as $field){
+                $fields .= '<div class="form-group">';
+                $fields .= ( $this->display == "inline" ) ? $field->getField('alert') : $field->getField();
+                $fields .= '</div>';
+                if ( $this->display == "top" || $this->display == "bottom" ) {
+                    $alerts .= '<p class="text-danger">' . $field->getAlert() . "</p>";
+                }
+            }
         }
-        echo '</form>';
+
+        $form = '<form action="' . $this->action . '" method="' . $this->method . '" class="' . $this->class . '">';
+        $form .= ( $this->display == "top" ) ? $alerts : "";
+        $form .= $fields;
+        $form .= ( $this->display == "bottom" ) ? $alerts : "";
+        $form .= '</form>';
+
+        return $form;
     }
 
-    public function populate($dados)
-    {
-        if ($this->getShowMessage() == "top"){
-            echo "<ul class='text-danger'>";
-            foreach ($dados as $dado){
-                echo ($dado->getAlert() != "") ? "<li>" . $dado->getAlert() . "</li>" : null;
-            }
-            echo "</ul>";
-            echo "<form>";
-            foreach ($dados as $dado){
-                echo "<div class='form-group'>";
-                echo ($dado->getLabel() !== NULL) ? $dado->getLabel() : null;
-                echo $dado->getField();
-                echo "</div>";
-            }
-            echo "</form>";
-        }
-
-        if ($this->getShowMessage() == NULL || $this->getShowMessage() == "middle"){
-            echo "<form>";
-            foreach ($dados as $dado){
-                echo "<div class='form-group'>";
-                echo ($dado->getLabel() !== NULL) ? $dado->getLabel() : null;
-                echo $dado->getField();
-                echo ($dado->getAlert() != "") ? "<p class='text-danger'>" . $dado->getAlert() . "</p>" : null;
-                echo "</div>";
-            }
-            echo "</form>";
-        }
-
-        if ($this->getShowMessage() == "bottom"){
-            echo "<form>";
-            foreach ($dados as $dado){
-                echo "<div class='form-group'>";
-                echo ($dado->getLabel() !== NULL) ? $dado->getLabel() : null;
-                echo $dado->getField();
-                echo "</div>";
-            }
-            echo "</form>";
-            echo "<ul class='text-danger'>";
-            foreach ($dados as $dado){
-                echo ($dado->getAlert() != "") ? "<li>" . $dado->getAlert() . "</li>" : null;
-            }
-            echo "</ul>";
-        }
-
-    }
-}
+} 

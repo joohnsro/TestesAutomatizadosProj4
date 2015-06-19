@@ -7,63 +7,119 @@ use JSRO\FieldAbstract;
 
 class Select extends FieldAbstract
 {
-    protected $id;
-    protected $name;
-    protected $options = array();
-    protected $class;
-    protected $label;
 
-    public function setId($id){
-        if ( !is_string($id) ){
-            throw new \InvalidArgumentException("O id precisa ser do tipo string.");
-        }
-        $this->id = $id;
+    private $id;
+    private $name;
+    private $class;
+    private $protected;
+    private $label;
+    private $options = array();
+
+    /**
+     * @param mixed $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
     }
 
-    public function getId(){ return $this->id; }
-
-    public function setName($name){
-        if ( !is_string($name) ){
-            throw new \InvalidArgumentException("O nome precisa ser do tipo string.");
-        }
-        $this->name = $name;
+    /**
+     * @return mixed
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 
-    public function getName(){ return $this->name; }
-
-    public function setOptions($options){
-        if ( !is_array($options) ){
-            throw new \InvalidArgumentException("As opções precisam ser do tipo array.");
-        }
-        $this->options = $options;
-    }
-
-    public function getOptions(){ return $this->options; }
-
-    public function setClass($class){
-        if ( !is_string($class) ){
-            throw new \InvalidArgumentException("O id precisa ser do tipo string.");
-        }
+    /**
+     * @param mixed $class
+     */
+    public function setClass($class)
+    {
         $this->class = $class;
     }
 
-    public function getClass(){ return $this->class; }
-
-    public function adicionaLabel($label)
+    /**
+     * @return mixed
+     */
+    public function getClass()
     {
-        if ( !is_string($label) ) {
-            throw new \InvalidArgumentException("A label pracisa ser do tipo string.");
-        }
-
-        $this->label = "<label for='" . $this->getId() . "'>" . $label . "</label>";
+        return $this->class;
     }
 
-    public function getField(){
-        echo "<select id='" . $this->getId() . "' name='" . $this->getName() . "' class='form-control " . $this->getClass() . "'>";
-        foreach($this->getOptions() as $option){
-            echo "<option value='" . $option['value'] . "'>" . $option['name'] . "</option>";
-        }
-        echo "</select>";
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
-}
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $protected
+     */
+    public function setProtected($protected)
+    {
+        $this->protected = $protected;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProtected()
+    {
+        return $this->protected;
+    }
+
+    public function getField($alert = null)
+    {
+        $options = "";
+        foreach ( $this->options as $option ) {
+            $options .= '<option value="' . $option['value'] . '">' . $option['name'] . '</option>';
+        }
+
+        $field = ($this->label) ? '<label for="' . $this->id . '">' . $this->label . '</label>' : '';
+        $field .= '<select id="' . $this->id . '" name="' . $this->name . '" class="' . $this->class . '" ' . $this->protected . '>' . $options . '</select>';
+        $field .= ( $alert != "" || $alert !== null ) ? '<p class="text-danger">' . $this->getAlert() . '</p>' : '';
+        return $field;
+    }
+
+    public function addOption($option)
+    {
+        if ( !is_array($option) ) {
+            throw new \InvalidArgumentException("A opcao nao e do tipo necessario.");
+        }
+
+        $this->options[] = $option;
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+} 

@@ -7,69 +7,141 @@ use JSRO\FieldAbstract;
 
 class Input extends FieldAbstract
 {
-    protected $type;
-    protected $id;
-    protected $name;
-    protected $value;
-    protected $class;
-    protected $label;
 
-    public function setType($type){
-        if( !is_string($type) ){
-            throw new \InvalidArgumentException("O tipo precisa ser do tipo string.");
-        }
-        $this->type = $type;
-    }
+    private $type;
+    private $id;
+    private $name;
+    private $class;
+    private $protected;
+    private $value;
+    private $label;
 
-    public function getType(){ return $this->type; }
-
-    public function setId($id){
-        if( !is_string($id) ){
-            throw new \InvalidArgumentException("O id precisa ser do tipo string.");
-        }
-        $this->id = $id;
-    }
-
-    public function getId(){ return $this->id; }
-
-    public function setName($name){
-        if( !is_string($name) ){
-            throw new \InvalidArgumentException("O nome precisa ser do tipo string.");
-        }
-        $this->name = $name;
-    }
-
-    public function getName(){ return $this->name; }
-
-    public function setValue($value){
-        if( !is_string($value) ){
-            throw new \InvalidArgumentException("O valor precisa ser do tipo string.");
-        }
+    /**
+     * @param mixed $value
+     */
+    public function setValue($value)
+    {
         $this->value = $value;
     }
 
-    public function getValue(){ return $this->value; }
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-    public function setClass($class){
-        if( !is_string($class) ){
-            throw new \InvalidArgumentException("A classe precisa ser do tipo string.");
-        }
+    /**
+     * @param mixed $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param mixed $class
+     */
+    public function setClass($class)
+    {
         $this->class = $class;
     }
 
-    public function getClass(){ return $this->class; }
-
-    public function adicionaLabel($label)
+    /**
+     * @return mixed
+     */
+    public function getClass()
     {
-        if ( !is_string($label) ) {
-            throw new \InvalidArgumentException("A label pracisa ser do tipo string.");
+        return $this->class;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $protected
+     */
+    public function setProtected($protected)
+    {
+        $this->protected = $protected;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProtected()
+    {
+        return $this->protected;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function getField($alert = null)
+    {
+        if ( $this->name == "nome" && ( $this->value == "" || $this->value === null ) ) {
+            $this->setAlert("O campo nome está em branco.");
         }
 
-        $this->label = "<label for='" . $this->getId() . "'>" . $label . "</label>";
+        if ( $this->name == "valor" && !is_numeric($this->value) ) {
+            $this->setAlert("O campo valor precisa ser númerico. (Ex.: 00.00).");
+        }
+
+        $field = (!is_null($this->label)) ? '<label for="' . $this->id . '">' . $this->label . '</label>' : '';
+        $field .= '<input type="' . $this->type . '" id="' . $this->id . '" name="' . $this->name . '" class="' . $this->class . '" value="' . $this->value . '" ' . $this->protected . '>';
+        $field .= ( $alert != "" || $alert !== null ) ? '<p class="text-danger">' . $this->getAlert() . '</p>' : '';
+        return $field;
     }
 
-    public function getField(){
-        echo "<input type='" . $this->getType() . "' id='" . $this->getId() . "' name='" . $this->getName() . "' value='" . $this->getValue() . "' class='form-control " . $this->getClass() . "'>";
-    }
-
-}
+} 

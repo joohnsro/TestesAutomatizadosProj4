@@ -2,58 +2,146 @@
 
 namespace JSRO\Fields;
 
+
 use JSRO\FieldAbstract;
 
 class Textarea extends FieldAbstract
 {
-    protected $id;
-    protected $name;
-    protected $value;
-    protected $class;
-    protected $label;
 
-    public function setId($id){
-        if ( !is_string($id) ){
-            throw new \InvalidArgumentException("O id precisa ser do tipo string.");
+    private $id;
+    private $name;
+    private $rows;
+    private $class;
+    private $protected;
+    private $value;
+    private $label;
+
+    /**
+     * @param mixed $rows
+     */
+    public function setRows($rows)
+    {
+        if ( !is_int($rows) ) {
+            throw new \InvalidArgumentException("O valor precisa ser inteiro.");
         }
-        $this->id = $id;
+
+        $this->rows = $rows;
     }
 
-    public function getId(){ return $this->id; }
-
-    public function setName($name){
-        if ( !is_string($name) ){
-            throw new \InvalidArgumentException("O nome precisa ser do tipo string.");
-        }
-        $this->name = $name;
+    /**
+     * @return mixed
+     */
+    public function getRows()
+    {
+        return $this->rows;
     }
 
-    public function getName(){ return $this->name; }
+    /**
+     * @param mixed $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
 
-    public function setValue($value){ $this->value = $value; }
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-    public function getValue(){ return $this->value; }
+    /**
+     * @param mixed $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+    }
 
-    public function setClass($class){
-        if ( !is_string($class) ){
-            throw new \InvalidArgumentException("O id precisa ser do tipo string.");
-        }
+    /**
+     * @return mixed
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param mixed $class
+     */
+    public function setClass($class)
+    {
         $this->class = $class;
     }
 
-    public function getClass(){ return $this->class; }
-
-    public function adicionaLabel($label)
+    /**
+     * @return mixed
+     */
+    public function getClass()
     {
-        if ( !is_string($label) ) {
-            throw new \InvalidArgumentException("A label pracisa ser do tipo string.");
+        return $this->class;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $protected
+     */
+    public function setProtected($protected)
+    {
+        $this->protected = $protected;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProtected()
+    {
+        return $this->protected;
+    }
+
+    public function getField($alert = null)
+    {
+        if ( $this->name == "descricao" && strlen($this->value) > 200 ) {
+            $this->setAlert("O campo descrição não pode conter mais de 200 caracteres.");
         }
 
-        $this->label = "<label for='" . $this->getId() . "'>" . $label . "</label>";
+        $field = (!is_null($this->label)) ? '<label for="' . $this->id . '">' . $this->label . '</label>' : '';
+        $field .= '<textarea id="' . $this->id . '" name="' . $this->name . '" class="' . $this->class . '" rows="' . $this->rows . '" '. $this->protected . '>' . $this->value . '</textarea>';
+        $field .= ( $alert != "" || $alert !== null ) ? '<p class="text-danger">' . $this->getAlert() . '</p>' : '';
+        return $field;
     }
 
-    public function getField(){
-        echo "<textarea id='" . $this->getId() . "' name='" . $this->getName() . "' class='form-control " . $this->getClass() . "' rows='3'>" . $this->getValue() . "</textarea>";
-    }
-
-}
+} 

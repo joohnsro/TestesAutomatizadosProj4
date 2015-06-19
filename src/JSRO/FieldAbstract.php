@@ -5,10 +5,25 @@ namespace JSRO;
 
 abstract class FieldAbstract
 {
-    protected $alert;
 
-    public function setAlert($alert){ $this->alert = $alert;}
-    public function getAlert(){ return $this->alert; }
+    private $alert;
 
-    public abstract function getField();
-}
+    /**
+     * @param mixed $alert
+     */
+    public function setAlert($alert)
+    {
+        $this->alert = $alert;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAlert()
+    {
+        return $this->alert;
+    }
+
+    abstract public function getField();
+
+} 
